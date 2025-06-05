@@ -4,7 +4,7 @@ import json
 from PIL import Image
 import cv2
 import numpy as np
-
+import shutil
 
 INCOMING_DIR = 'incoming'
 
@@ -13,6 +13,16 @@ def finalize_and_move(source_dir, target_dir):
     for file in os.listdir(source_dir):
         if file.endswith('.jpg') or file.endswith('.txt'):
             shutil.move(os.path.join(source_dir, file), os.path.join(target_dir, file))
+
+
+def delete_folder(folder_name):
+    target_path = os.path.join(os.getcwd(), folder_name)
+
+    if os.path.exists(target_path) and os.path.isdir(target_path):
+        shutil.rmtree(target_path)
+        print(f"Deleted folder: {target_path}")
+    else:
+        print(f"Folder '{folder_name}' does not exist in the current directory.")
 
 
 def save_yolo_boxes(yolo_boxes, image_path):
@@ -137,7 +147,8 @@ if __name__ == "__main__":
         print(yolo_boxes)
         save_yolo_boxes(yolo_boxes, files['image'])
         augment_image_variants(files['image'], base, yolo_boxes)
-        print()
+    finalize_and_move('incoming/', 'C:/Users/eu/simple_yolo_trainer/datasets/yolo/example/train')
+    delete_folder('incoming/')
 
 
 
